@@ -1,0 +1,16 @@
+---
+
+- name: add sbt yum repository
+  get_url:
+    url: https://bintray.com/sbt/rpm/rpm
+    dest: /etc/yum.repos.d/bintray-sbt-rpm.repo
+
+- yum: name=sbt
+
+- name: set up oschina repository mirror for Sbt
+  copy:
+    src: roles/sbt/files/repositories
+    dest: /var/go/.sbt/repositories
+    owner: go
+    group: go
+

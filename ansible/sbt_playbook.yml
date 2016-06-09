@@ -1,0 +1,10 @@
+---
+- hosts: gocd
+  remote_user: root
+  become: yes
+  become_user: root
+  vars:
+      version: 1.0
+      debug: 0
+  roles:
+     - sbt
