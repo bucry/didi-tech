@@ -2,7 +2,7 @@ import com.didi.config.{CsvFilePath, TsvFilePath}
 import com.didi.merge.Merge
 import com.didi.models._
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.{Row, SQLContext}
+import org.apache.spark.sql.{DataFrame, Row, SQLContext}
 import org.apache.spark.{SparkConf, SparkContext}
 
 object App {
@@ -39,8 +39,19 @@ object App {
     val weatherDataFrame = weatherRDD.map(f => Weather(f(0), f(1).trim.toInt, f(2).trim.toDouble, f(3).trim.toDouble)).toDF()
     weatherDataFrame.registerTempTable("weather")
 
+
+
+    val trafficWithRegion = clusterDataFrame.join(trafficDataFrame, clusterDataFrame("districtHash") === trafficDataFrame("districtHash"), "left")
+    trafficWithRegion.show()
+    val s = orderDataFrame.join(weatherDataFrame, orderDataFrame("time") === weatherDataFrame("time"), "left")
+    s.show()
   }
 
+
+
+  private def join(dataFrames: Array[DataFrame]): DataFrame = {
+    ???
+  }
 
   private def saveRDD2CSV(rdd: RDD[Array[String]]): Unit = {
     rdd.map(row => row.mkString(",")).saveAsTextFile(CsvFilePath.saveMergeFilePath)
