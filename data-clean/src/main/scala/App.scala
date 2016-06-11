@@ -1,13 +1,20 @@
 import com.didi.config.{CsvFilePath, TsvFilePath}
 import com.didi.merge.Merge
+import com.didi.models._
 import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.{Row, SQLContext}
 import org.apache.spark.{SparkConf, SparkContext}
 
 object App {
 
+
   def main(args: Array[String]) {
     val conf = new SparkConf().setMaster("local[1]").setAppName("DIDI-TECH")
     val sc = new SparkContext(conf)
+
+
+    val sqlContext = new SQLContext(sc)
+    import sqlContext.implicits._
 
     val orderRDD = loadRDD(sc, TsvFilePath.orderFilePath)
     val trafficRDD = loadRDD(sc, TsvFilePath.trafficFilePath)
@@ -16,8 +23,22 @@ object App {
     val weatherRDD = loadRDD(sc, TsvFilePath.weatherFilePath)
 
 
-    val response = Merge.mergeRDD(orderRDD, trafficRDD, clusterRDD, poiRDD, weatherRDD)
-    saveRDD2CSV(response)
+    val orderDataFrame = orderRDD.map(f => Order(f(0), f(1), f(2), f(3), f(4), f(5).trim.toDouble, f(6))).toDF()
+    orderDataFrame.registerTempTable("order")
+
+    val trafficDataFrame = trafficRDD.map(f => Traffic(f(0), f(1), f(2))).toDF()
+    trafficDataFrame.registerTempTable("traffic")
+
+
+    val clusterDataFrame = clusterRDD.map(f => Cluster(f(0), f(1))).toDF()
+    clusterDataFrame.registerTempTable("cluster")
+
+    val poiDataFrame = poiRDD.map(f => Poi(f(0), f(1))).toDF()
+    poiDataFrame.registerTempTable("poi")
+
+    val weatherDataFrame = weatherRDD.map(f => Weather(f(0), f(1).trim.toInt, f(2).trim.toDouble, f(3).trim.toDouble)).toDF()
+    weatherDataFrame.registerTempTable("weather")
+
   }
 
 
