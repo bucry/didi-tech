@@ -4,7 +4,7 @@ package com.didi.config
   * Created by twcn on 6/8/16.
   */
 
-//todo you should modify the variable to using your file path
+//TODO you should modify the variable to using your file path
 object TsvFilePath {
   val orderFilePath = "/Users/twcn/Downloads/season_1/training_data/order_data/order_data_*"
   val trafficFilePath = "/Users/twcn/Downloads/season_1/training_data/traffic_data/traffic_data_*"
