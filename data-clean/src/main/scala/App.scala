@@ -13,8 +13,8 @@ object App {
 
     val trafficWithRegion = clusterDataFrame.join(trafficDataFrame, clusterDataFrame("districtHash") === trafficDataFrame("districtHash"), "left")
     trafficWithRegion.show()
-    val s = orderDataFrame.join(weatherDataFrame, orderDataFrame("time") === weatherDataFrame("time"), "left")
-    s.show()
+    val orderWithWeather = orderDataFrame.join(weatherDataFrame, orderDataFrame("time") === weatherDataFrame("time"), "left")
+    orderWithWeather.show()
   }
 
 }

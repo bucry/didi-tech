@@ -1,5 +1,7 @@
 package com.didi.service
 
+import java.text.SimpleDateFormat
+
 import com.didi.DiDiSparkContent._
 import com.didi.config.TsvFilePath
 import com.didi.models._
@@ -14,7 +16,7 @@ object DataFrameService {
 
   def loadOrderDataFrame(): DataFrame = {
     val orderRDD = loadRDD(sc, TsvFilePath.orderFilePath)
-    val orderDataFrame = orderRDD.map(f => Order(f(0), f(1), f(2), f(3), f(4), f(5).trim.toDouble, f(6))).toDF()
+    val orderDataFrame = orderRDD.map(f => Order(f(0), f(1), f(2), f(3), f(4), f(5).trim.toDouble, formatTimeSlice(f(6)))).toDF()
     orderDataFrame.registerTempTable("order")
     orderDataFrame
   }
@@ -53,5 +55,17 @@ object DataFrameService {
     val rdd = sc.textFile(filePath)
     rdd.map(_.split("\t"))
   }
+
+  private def formatTimeSlice(time: String): String = {
+    val simpleDateFormatPrefix = new SimpleDateFormat("yyyy-MM-dd")
+    val simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+    val diffTimestamp = (simpleDateFormat.parse(time).getTime() - simpleDateFormatPrefix.parse(time).getTime) / 1000 / 60
+    val timeSlice = if (diffTimestamp / 10 == 0)  diffTimestamp / 10 else diffTimestamp / 10 + 1
+    simpleDateFormatPrefix.format(simpleDateFormatPrefix.parse(time)) + "-" + timeSlice.toString
+  }
+
+
+
+
 
 }
