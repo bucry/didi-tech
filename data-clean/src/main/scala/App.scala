@@ -19,13 +19,13 @@ object App {
 
 
     val aij = orderDataFrame.groupBy("time").count()
-    val rij = orderDataFrame.filter(orderDataFrame("driverId").isNotNull).groupBy("time").count()
+    val rij = orderDataFrame.filter(orderDataFrame("driverId") !== "NULL").groupBy("time").count()
 
     println(aij.count())
     println(rij.count())
 
-    val fullOrderDataFrame = aij.join(rij, aij("time").as("t1") === rij("time").as("t2"), "left")
-    fullOrderDataFrame.show()
+    //val fullOrderDataFrame = aij.join(rij, aij("time").as("t1") === rij("time").as("t2"), "left")
+    //fullOrderDataFrame.show()
 
     //val df4 = fullOrderDataFrame.select($"aij.time".as("t1"), $"aij.count".as("t2"), "*")
     //df4.show()
