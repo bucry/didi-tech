@@ -64,8 +64,4 @@ object DataFrameService {
     simpleDateFormatPrefix.format(simpleDateFormatPrefix.parse(time)) + "-" + timeSlice.toString
   }
 
-
-
-
-
 }

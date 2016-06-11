@@ -5,6 +5,6 @@ package com.didi.config
   */
 object CsvFilePath {
 
-  val saveMergeFilePath = ""
+  val saveMergeFilePath = "/Users/twcn/Downloads/1.csv"
 
 }
