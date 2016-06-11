@@ -1,19 +1,15 @@
 package com.didi.models
 
-/**
-  * Created by twcn on 6/9/16.
-  */
+case class Order(orderId: String, driverId: String, passengerId: String, startRegion: String, destRegion: String, price: Double, time: String)
 
-case class Table(orderId: String,
-                 driverId: String,
-                 passengerId: String,
-                 startRegion: String,
-                 destRegion: String,
-                 price: Double,
-                 time: String,
-                 poiClass: String,
-                 tjLevel: String,
-                 weather: Int,
-                 temperature: Int,
-                 pm2point5: Int
-                )
+case class Cluster(districtHash: String, districtId: String)
+
+case class Poi(districtHash: String, poiClass: String)
+
+case class Traffic(districtHash: String, tjLevel: String, tjTime: String)
+
+case class Weather(time: String, weather: Int, temperature: Double, pm2p5: Double)
+
+object Table {
+
+}
