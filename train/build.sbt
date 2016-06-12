@@ -20,3 +20,5 @@ scalacOptions ++= Seq(
 testOptions += Tests.Argument(TestFrameworks.JUnit, "-v")
 
 incOptions := incOptions.value.withNameHashing(true).withRecompileOnMacroDef(false)
+
+
