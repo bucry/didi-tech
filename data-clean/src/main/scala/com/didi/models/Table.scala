@@ -1,19 +1,19 @@
 package com.didi.models
 
 
-case class Table()
+abstract class Table()
 
-case class FeatureTable()
+abstract class FeatureTable()
 
-case class Order(orderId: String, driverId: String, passengerId: String, startRegion: String, destRegion: String, price: Double, time: String)
+case class Order(orderId: String, driverId: String, passengerId: String, startRegion: String, destRegion: String, price: Double, time: String) extends Table()
 
-case class Cluster(districtHash: String, districtId: String)
+case class Cluster(districtHash: String, districtId: String)  extends Table()
 
-case class Poi(districtHash: String, poiClass: String)
+case class Poi(districtHash: String, poiClass: String)  extends Table()
 
-case class Traffic(districtHash: String, tjLevel: String, tjTime: String)
+case class Traffic(districtHash: String, tjLevel: String, tjTime: String)  extends Table()
 
-case class Weather(time: String, weather: Int, temperature: Double, pm2p5: Double)
+case class Weather(time: String, weather: Int, temperature: Double, pm2p5: Double)  extends Table()
 
 final case class FullOrder(
                            orderId: String,
@@ -31,6 +31,6 @@ final case class FullOrder(
                            pm2p5: Double,
                            poiClass: String,
                            time: String
-                          )
+                          )  extends Table()
 
-final case class OrderFeatureTable()
+final case class OrderFeatureTable() extends FeatureTable()
