@@ -1,11 +1,13 @@
 package com.didi.spike
 
+import java.util.UUID
+
 import org.apache.spark.ml.Pipeline
 import org.apache.spark.ml.classification.MultilayerPerceptronClassifier
 import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
-import org.apache.spark.ml.feature.{IndexToString, StringIndexer, Word2Vec}
+import org.apache.spark.ml.feature._
 import org.apache.spark.sql.SQLContext
-import org.apache.spark.{SparkContext, SparkConf}
+import org.apache.spark.{SparkConf, SparkContext}
 
 object MultilayerPerceptron {
   final val VECTOR_SIZE = 100
@@ -13,14 +15,16 @@ object MultilayerPerceptron {
     val conf = new SparkConf().setMaster("local[8]").setAppName("DIDI-TECH")
     val sc = new SparkContext(conf)
     val sqlCtx = new SQLContext(sc)
-    val parsedRDD = sc.textFile(this.getClass.getResource("SMSSpamCollection.txt").toString).map(_.split("\t")).map(eachRow => {
+    val parsedRDD = sc.textFile(this.getClass.getResource("message.txt").toString).map(_.split("\t")).map(eachRow => {
       (eachRow(0),eachRow(1).split(" "))
     })
     val msgDF = sqlCtx.createDataFrame(parsedRDD).toDF("label","message")
+
     val labelIndexer = new StringIndexer()
       .setInputCol("label")
       .setOutputCol("indexedLabel")
       .fit(msgDF)
+
 
     val word2Vec = new Word2Vec()
       .setInputCol("message")
@@ -28,7 +32,7 @@ object MultilayerPerceptron {
       .setVectorSize(VECTOR_SIZE)
       .setMinCount(1)
 
-    val layers = Array[Int](VECTOR_SIZE,6,5,2)
+    val layers = Array[Int](VECTOR_SIZE,6,5,4)
     val mlpc = new MultilayerPerceptronClassifier()
       .setLayers(layers)
       .setBlockSize(512)
@@ -43,9 +47,12 @@ object MultilayerPerceptron {
       .setOutputCol("predictedLabel")
       .setLabels(labelIndexer.labels)
 
+
+
+
     val Array(trainingData, testData) = msgDF.randomSplit(Array(0.8, 0.2))
 
-    val pipeline = new Pipeline().setStages(Array(labelIndexer,word2Vec,mlpc,labelConverter))
+    val pipeline = new Pipeline().setStages(Array(labelIndexer, word2Vec, mlpc, labelConverter))
     val model = pipeline.fit(trainingData)
 
     val predictionResultDF = model.transform(testData)

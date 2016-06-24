@@ -86,7 +86,6 @@ object ClassificationPipeline {
       */
     val pipeline = new Pipeline().setStages(Array(labelIndexer,vectorAssembler,rfClassifier,labelConverter))
     val model = pipeline.fit(trainingData)
-
     /**
       *Step 8
       *Perform predictions about testing data. This transform method will return a result DataFrame

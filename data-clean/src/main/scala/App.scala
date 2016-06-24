@@ -20,22 +20,25 @@ object App {
     val trafficWithRegion = Flatter.join(clusterDataFrame, trafficDataFrame, com.didi.merge.Flatter.Left("districtHash"))
     trafficWithRegion.show()
 
-    val aij = orderDataFrame.groupBy("time").count()
-    val rij = orderDataFrame.filter(orderDataFrame("driverId") !== "NULL").groupBy("time").count()
 
-    println(aij.count())
-    println(rij.count())
-
-    val fullOrderDataFrame = aij.join(rij, aij("time").as("t1") === rij("time").as("t2"), "left")
-    fullOrderDataFrame.show()
-    import fullOrderDataFrame.sqlContext.implicits._
-    val df4 = fullOrderDataFrame.select($"aij.time".as("t1"), $"aij.count".as("t2"))
-    df4.show()
-
-    val orderWithWeather = orderDataFrame.join(weatherDataFrame, orderDataFrame("time") === weatherDataFrame("time"), "left")
-    orderWithWeather.show()
-
-    trafficWithRegion.rdd.saveAsTextFile(CsvFilePath.saveMergeFilePath)
+    orderDataFrame.show()
+//
+//    val aij = orderDataFrame.groupBy("time").count()
+//    val rij = orderDataFrame.filter(orderDataFrame("driverId") !== "NULL").groupBy("time").count()
+//
+//    println(aij.count())
+//    println(rij.count())
+//
+//    val fullOrderDataFrame = aij.join(rij, aij("time").as("t1") === rij("time").as("t2"), "left")
+//    fullOrderDataFrame.show()
+//    import fullOrderDataFrame.sqlContext.implicits._
+//    val df4 = fullOrderDataFrame.select($"aij.time".as("t1"), $"aij.count".as("t2"))
+//    df4.show()
+//
+//    val orderWithWeather = orderDataFrame.join(weatherDataFrame, orderDataFrame("time") === weatherDataFrame("time"), "left")
+//    orderWithWeather.show()
+//
+//    trafficWithRegion.rdd.saveAsTextFile(CsvFilePath.saveMergeFilePath)
 
 
     //TODO dump data frame to csv, invoke the saveDataFrame2CSV method

@@ -50,11 +50,9 @@ object RandomForestDemo {
     println("Learned classification forest model:\n" + model.toDebugString)
 
     // 将训练后的随机森林模型持久化
-    model.save(sc, "ranmodmyModelPath")
+    //model.save(sc, "ranmodmyModelPath")
     //加载随机森林模型到内存
     val sameModel = RandomForestModel.load(sc, "ranmodmyModelPath")
-
-
     //println(sameModel.predict(Vectors.dense(Array(9.2, 9.2, 9.2))))
     //println("------")
   }
